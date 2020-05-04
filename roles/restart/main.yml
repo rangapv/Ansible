@@ -1,3 +1,0 @@
----
-- name: Call for restarts
-  import_tasks: rest.yml

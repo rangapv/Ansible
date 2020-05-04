@@ -1,3 +1,0 @@
----
-- name: to nclude iptables at restart
-  import_tasks: ipt.yml
