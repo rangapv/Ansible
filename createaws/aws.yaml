@@ -1,0 +1,94 @@
+- name: Create instance(s)
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  vars:
+   nodes: "['{{ adm1 }}']"
+  tasks:
+   - name: Launch instances
+     ec2:
+       aws_secret_key: "{{ aws_secret_key }}"
+       aws_access_key: "{{ aws_access_key }}"
+       key_name: AldoCloudKEY 
+       instance_type: "{{ instance_type }}"
+       image: ami-00fda5ddc3bc9876a
+       volumes:
+         - device_name: /dev/sda1
+           volume_size: 20
+           volume_name: "{{ item }}"
+           volume_type: gp2
+           Name: "{{ item }}"
+           delete_on_termination: true
+       wait: yes
+       group: launch-wizard-1
+       exact_count: "{{ count }}"
+       count_tag: { Name: "{{ item }}" }
+       vpc_subnet_id: "{{ vpc_subnet_id }}"
+       assign_public_ip: yes
+       instance_tags:
+           Name: "{{ item }}"
+       instance_type: "{{ instance_type }}"
+       region: "{{ region }}"
+       zone: us-west-2c
+     with_items:
+          - "{{ nodes }}"
+#     when: tr.stdout == "[]"
+     ignore_errors: yes
+     register: ec2
+
+   - name: ec2 facts
+     ec2_instance_facts:
+      aws_secret_key: "{{ aws_secret_key }}"
+      aws_access_key: "{{ aws_access_key }}"
+      region: "{{ region }}"
+      filters:
+         "tag:Name": "{{ nodes }}"
+     register: efacts
+
+
+   - name: start
+     ec2:
+       aws_secret_key: "{{ aws_secret_key }}"
+       aws_access_key: "{{ aws_access_key }}"
+       instance_tags:
+          Name: "{{ item }}"
+       assign_public_ip: yes
+#       exact_count: 1 
+       region: "{{ region }}"
+       instance_type: "{{ instance_type }}"
+       state: running
+     with_items:
+        - "{{ nodes }}"
+
+   - name: Wait for SSH to come up
+     wait_for: host={{ item.public_ip_address }} port=22 delay=60 timeout=320
+     with_items: "{{ efacts.instances }}"
+
+   - name: Add host to groupname
+     add_host: hostname={{ item.public_ip_address }} groupname=ec2_instances ansible_hostname={{ item.public_ip_address }}
+     with_items:  "{{ efacts.instances }}"
+
+
+
+- name: Managege
+  hosts: ec2_instances
+  connection: ssh
+  gather_facts: yes
+  become: true
+  become_user: ubuntu
+  become_method: sudo
+  remote_user: ubuntu
+  vars:
+    tag1:
+    ansible_ssh_private_key_file: /home/rangapv08/ans/AldoCloudKEY.pem
+    ansible_user: ubuntu
+  tasks:
+  roles:
+       - { role: iptable }
+
+  post_tasks:
+    - name: chk tag
+      include_role:
+        name: restart 
+
