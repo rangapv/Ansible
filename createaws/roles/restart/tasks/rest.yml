@@ -1,0 +1,15 @@
+---
+- local_action:
+   module: ec2
+   aws_secret_key: "{{ aws_secret_key }}"
+   aws_access_key: "{{ aws_access_key }}"
+   instance_type: "{{ instance_type }}"
+   instance_tags:
+      Name: "{{ tag1 }}"
+   region: "{{ region }}"
+   assign_public_ip: yes
+   state: restarted
+
+- wait_for_connection:
+    delay: 60
+    timeout: 320

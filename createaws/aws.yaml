@@ -10,9 +10,9 @@
      ec2:
        aws_secret_key: "{{ aws_secret_key }}"
        aws_access_key: "{{ aws_access_key }}"
-       key_name: AldoCloudKEY 
+       key_name: "{{ key_name }}" 
        instance_type: "{{ instance_type }}"
-       image: ami-00fda5ddc3bc9876a
+       image: "{{ ami_image }}"
        volumes:
          - device_name: /dev/sda1
            volume_size: 20
@@ -30,7 +30,7 @@
            Name: "{{ item }}"
        instance_type: "{{ instance_type }}"
        region: "{{ region }}"
-       zone: us-west-2c
+       zone: "{{aws_zone }}" 
      with_items:
           - "{{ nodes }}"
 #     when: tr.stdout == "[]"
@@ -81,7 +81,7 @@
   remote_user: ubuntu
   vars:
     tag1:
-    ansible_ssh_private_key_file: /home/rangapv08/ans/AldoCloudKEY.pem
+    ansible_ssh_private_key_file: "{{ ssh_key }}"
     ansible_user: ubuntu
   tasks:
   roles:
