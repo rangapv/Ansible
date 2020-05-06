@@ -1,0 +1,8 @@
+[kubeadm]
+kubeadm1 ansible_ssh_host=35.35.35.35
+[aws]
+aws1 ansible_ssh_host=52.34.195.122
+aws2 ansible_ssh_host=54.149.189.56
+
+[l1]
+l1 ansible_ssh_host=10.0.0.1
