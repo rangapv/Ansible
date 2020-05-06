@@ -3,7 +3,7 @@ key_name: AldoCloudKEY
 aws_access_key: *************************** 
 aws_secret_key: ********************************* 
 wait: yes
-group: kubeawsadm1
+group: launch-wizard-1 
 count: 1
 aws_zone: us-west-2c
 instance_type: t2.medium

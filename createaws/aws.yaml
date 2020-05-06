@@ -21,7 +21,7 @@
            Name: "{{ item }}"
            delete_on_termination: true
        wait: yes
-       group: launch-wizard-1
+       group: "{{ group }}"
        exact_count: "{{ count }}"
        count_tag: { Name: "{{ item }}" }
        vpc_subnet_id: "{{ vpc_subnet_id }}"
