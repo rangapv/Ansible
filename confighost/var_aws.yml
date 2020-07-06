@@ -1,0 +1,13 @@
+ami_image: ami-00fda5ddc3bc9876a
+key_name: AldoCloudKEY
+aws_access_key: *************************** 
+aws_secret_key: ********************************* 
+wait: yes
+group: launch-wizard-1 
+count: 1
+aws_zone: us-west-2c
+instance_type: t2.medium
+vpc_subnet_id: subnet-e44865bc
+ssh_key: /home/rangapv08/ans/AldoCloudKEY.pem
+assign_public_ip: yes
+region: us-west-2
