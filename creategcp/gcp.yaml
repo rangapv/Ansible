@@ -1,0 +1,27 @@
+- name: Create instance(s)
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  tasks:
+
+   - name: Launch instances
+     gcp_compute_instance:
+         name: kubenode32
+         auth_kind: serviceaccount
+         machine_type: "{{ machine_type }}"
+         disks:
+         - auto_delete: 'true'
+           boot: 'true'
+           initialize_params:
+             disk_size_gb: 10
+             source_image: projects/ubuntu-os-cloud/global/images/ubuntu-1604-xenial-v20200713a
+         network_interfaces:
+           - access_configs:
+             - name: External NAT
+               type: ONE_TO_ONE_NAT 
+         service_account_file: /home/rangapv08/myansible/new22.json 
+         project: "{{ project_id }}"
+         state: present
+         zone: "{{ zone }}"  
+     register: gce 
