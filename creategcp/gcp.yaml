@@ -5,9 +5,11 @@
 
   tasks:
 
+#   - debug:
+#       msg: The Value os myvar22 is {{ myvar22 }}
    - name: Launch instances
      gcp_compute_instance:
-         name: kubenode32
+         name: kubenode37
          auth_kind: serviceaccount
          machine_type: "{{ machine_type }}"
          disks:
@@ -16,12 +18,22 @@
            initialize_params:
              disk_size_gb: 10
              source_image: projects/ubuntu-os-cloud/global/images/ubuntu-1604-xenial-v20200713a
+#         service_account_email: "{{ service_account_email }}"
          network_interfaces:
            - access_configs:
              - name: External NAT
                type: ONE_TO_ONE_NAT 
-         service_account_file: /home/rangapv08/myansible/new22.json 
+         service_account_file: new22.json 
          project: "{{ project_id }}"
          state: present
+         status: RUNNING
          zone: "{{ zone }}"  
+         scopes: 
+           - https://www.googleapis.com/auth/compute
+           - https://www.googleapis.com/auth/cloud-platform
+           - https://www.googleapis.com/auth/devstorage.full_control
+           - https://www.googleapis.com/auth/source.full_control
+           - https://www.googleapis.com/auth/servicecontrol 
      register: gce 
+#   - debug:
+#       msg: The Value of myvar22 is {{ service_account_contents }}
